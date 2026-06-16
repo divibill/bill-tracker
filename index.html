@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bill & Payment Tracker</title>
+<style>
+  :root{
+    --bg:#FAF8F4;--card:#FFFFFF;--ink:#1F2A24;--muted:#6B7268;
+    --border:#E4E0D6;--accent:#0F6E56;--accent-light:#E1F5EE;
+    --danger:#A32D2D;--danger-light:#FCEBEB;--warn:#854F0B;--warn-light:#FAEEDA;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);padding:24px;line-height:1.5;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+  h1{font-size:24px;font-weight:700;letter-spacing:-0.01em;}
+  .sub{font-size:13px;color:var(--muted);margin-top:4px;}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
+  .stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+  .stat .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+  .stat .value{font-size:22px;font-weight:700;margin-top:4px;}
+  .stat.overdue .value{color:var(--danger);}
+  .stat.soon .value{color:var(--warn);}
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:24px;}
+  .panel h2{font-size:15px;font-weight:700;margin-bottom:14px;}
+  .form-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr auto;gap:10px;align-items:end;}
+  .field label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px;}
+  input{width:100%;height:38px;border:1px solid var(--border);border-radius:8px;padding:0 10px;font-size:14px;background:#fff;color:var(--ink);}
+  input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  button{height:38px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:600;font-size:14px;padding:0 16px;cursor:pointer;}
+  button.secondary{background:transparent;color:var(--ink);border:1px solid var(--border);font-weight:500;}
+  button:hover{opacity:.9;}
+  button:disabled{opacity:.5;cursor:not-allowed;}
+
+  .sync-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:13px;}
+  .sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:#ccc;transition:background .3s;}
+  .sync-dot.ok{background:#22c55e;}
+  .sync-dot.error{background:var(--danger);}
+  .sync-dot.loading{background:var(--warn);animation:pulse 1s infinite;}
+  .sync-dot.setup{background:#8b8b8b;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .sync-text{color:var(--muted);flex:1;}
+  .setup-link{font-size:12px;color:var(--accent);text-decoration:none;font-weight:600;}
+
+  .script-setup{padding:12px 14px;background:var(--accent-light);border:1px solid var(--accent);border-radius:10px;margin-bottom:16px;font-size:13px;}
+  .script-setup p{color:var(--accent);font-weight:600;margin-bottom:8px;}
+  .script-setup .url-row{display:flex;gap:8px;align-items:center;}
+  .script-setup input{flex:1;font-size:13px;border-color:var(--accent);}
+  .script-setup button{height:38px;font-size:13px;padding:0 14px;flex-shrink:0;}
+
+  .filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+  .filters button{background:transparent;color:var(--muted);border:1px solid var(--border);font-size:13px;height:32px;padding:0 14px;font-weight:500;}
+  .filters button.active{background:var(--accent-light);color:var(--accent);border-color:var(--accent);}
+
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  th{text-align:left;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;padding:8px 10px;border-bottom:1px solid var(--border);}
+  td{padding:10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+  tr.row-overdue td{background:var(--danger-light);}
+  tr.row-soon td{background:var(--warn-light);}
+  tr.row-paid td{color:var(--muted);}
+  tr.row-paid .supplier{text-decoration:line-through;}
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;}
+  .badge.overdue{background:var(--danger-light);color:var(--danger);}
+  .badge.soon{background:var(--warn-light);color:var(--warn);}
+  .badge.ok{background:var(--accent-light);color:var(--accent);}
+  .badge.paid{background:#EEE;color:var(--muted);}
+  .row-actions{display:flex;gap:6px;}
+  .row-actions button{height:30px;padding:0 10px;font-size:12px;background:transparent;color:var(--ink);border:1px solid var(--border);}
+  .row-actions button.danger{color:var(--danger);border-color:var(--danger-light);}
+  .empty{text-align:center;color:var(--muted);padding:40px 0;font-size:14px;}
+  .footer-note{font-size:12px;color:var(--muted);margin-top:8px;}
+
+  @media(max-width:760px){
+    .form-grid{grid-template-columns:1fr 1fr;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    table,thead,tbody,th,td,tr{display:block;}
+    thead{display:none;}
+    tr{border-bottom:1px solid var(--border);padding:8px 0;}
+    td{border:none;padding:4px 10px;}
+    td::before{content:attr(data-label);font-size:11px;color:var(--muted);display:block;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Bill &amp; payment tracker</h1>
+      <div class="sub">Synced with Google Sheets — all colleagues see the same data</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="secondary" id="refresh-btn">↻ Refresh</button>
+      <button class="secondary" id="export-btn">Export CSV</button>
+    </div>
+  </header>
+
+  <div class="sync-bar" id="sync-bar">
+    <div class="sync-dot setup" id="sync-dot"></div>
+    <span class="sync-text" id="sync-text">Paste your Apps Script URL below to connect Google Sheets.</span>
+    <a class="setup-link" href="#" id="setup-toggle">Set up ▾</a>
+  </div>
+
+  <div class="script-setup" id="setup-panel">
+    <p>Connect to Google Sheets</p>
+    <div class="url-row">
+      <input type="url" id="script-url" placeholder="https://script.google.com/macros/s/.../exec">
+      <button id="save-url-btn">Connect</button>
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:var(--accent);">
+      Paste the Web App URL you got after deploying <strong>Code.gs</strong> in Apps Script.
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="label">Total outstanding</div><div class="value" id="stat-total">₹0</div></div>
+    <div class="stat overdue"><div class="label">Overdue</div><div class="value" id="stat-overdue">₹0</div></div>
+    <div class="stat soon"><div class="label">Due in 7 days</div><div class="value" id="stat-soon">₹0</div></div>
+    <div class="stat"><div class="label">Open bills</div><div class="value" id="stat-count">0</div></div>
+  </div>
+
+  <div class="panel">
+    <h2>Add a bill</h2>
+    <div class="form-grid">
+      <div class="field"><label for="inp-supplier">Supplier / payee</label><input type="text" id="inp-supplier" placeholder="e.g. Sri Velan Yarns"></div>
+      <div class="field"><label for="inp-invoice">Invoice no.</label><input type="text" id="inp-invoice" placeholder="e.g. INV-1023"></div>
+      <div class="field"><label for="inp-amount">Amount (₹)</label><input type="number" id="inp-amount" placeholder="0" min="0"></div>
+      <div class="field"><label for="inp-date">Bill date</label><input type="date" id="inp-date"></div>
+      <div class="field"><label for="inp-credit">Credit days</label><input type="number" id="inp-credit" value="30" min="0"></div>
+      <button id="add-btn">Add bill</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Bills</h2>
+    <div class="filters">
+      <button class="filter-btn active" data-filter="open">Open</button>
+      <button class="filter-btn" data-filter="overdue">Overdue</button>
+      <button class="filter-btn" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="paid">Paid</button>
+    </div>
+    <table>
+      <thead><tr>
+        <th>Supplier</th><th>Invoice no.</th><th>Bill date</th>
+        <th>Amount</th><th>Credit</th><th>Due date</th><th>Status</th><th></th>
+      </tr></thead>
+      <tbody id="bills-body"></tbody>
+    </table>
+    <div id="empty-msg" class="empty" style="display:none;">No bills here yet.</div>
+    <div class="footer-note" id="footer-note">Connect Google Sheets above to sync with your team.</div>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL_KEY = 'bill_tracker_script_url';
+let SCRIPT_URL = localStorage.getItem(SCRIPT_URL_KEY) || '';
+let bills = [];
+let currentFilter = 'open';
+let isSyncing = false;
+
+const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+const todayStr = () => new Date().toISOString().split('T')[0];
+
+function daysBetween(a,b){
+  const A=new Date(a);A.setHours(0,0,0,0);
+  const B=new Date(b);B.setHours(0,0,0,0);
+  return Math.round((B-A)/86400000);
+}
+
+function statusFor(b){
+  const today=todayStr();
+  const daysLeft=daysBetween(today,b.dueDate);
+  if(b.paid) return {key:'paid',label:'Paid',cls:'paid',rowCls:'row-paid'};
+  if(daysLeft<0) return {key:'overdue',label:Math.abs(daysLeft)+' days overdue',cls:'overdue',rowCls:'row-overdue'};
+  if(daysLeft<=7) return {key:'soon',label:'Due in '+daysLeft+' day'+(daysLeft===1?'':'s'),cls:'soon',rowCls:'row-soon'};
+  return {key:'ok',label:'Due in '+daysLeft+' days',cls:'ok',rowCls:''};
+}
+
+function escapeHtml(str){
+  const d=document.createElement('div');d.textContent=String(str||'');return d.innerHTML;
+}
+
+function setSyncStatus(state,message){
+  document.getElementById('sync-dot').className='sync-dot '+state;
+  document.getElementById('sync-text').textContent=message;
+}
+
+function setLoading(on){
+  isSyncing=on;
+  document.getElementById('add-btn').disabled=on;
+  document.getElementById('refresh-btn').disabled=on;
+}
+
+// All API calls use GET with query params — avoids CORS preflight issues
+async function api(params){
+  if(!SCRIPT_URL) throw new Error('No script URL');
+  const qs=new URLSearchParams(params).toString();
+  const res=await fetch(SCRIPT_URL+'?'+qs+'&t='+Date.now());
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  const data=await res.json();
+  if(data.error) throw new Error(data.error);
+  return data;
+}
+
+async function loadBills(){
+  if(!SCRIPT_URL){setSyncStatus('setup','Paste your Apps Script URL above to get started.');return;}
+  setLoading(true);
+  setSyncStatus('loading','Syncing with Google Sheets…');
+  try{
+    const data=await api({action:'list'});
+    bills=data.bills||[];
+    const t=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    setSyncStatus('ok','Synced · Last updated '+t);
+    document.getElementById('footer-note').textContent='Data stored in Google Sheets — shared with your team.';
+  }catch(e){
+    setSyncStatus('error','Failed to fetch: '+e.message+' — check your URL and re-deploy.');
+    console.error(e);
+  }finally{
+    setLoading(false);
+    render();
+  }
+}
+
+async function addBill(){
+  const supplier=document.getElementById('inp-supplier').value.trim();
+  const invoice=document.getElementById('inp-invoice').value.trim();
+  const amount=parseFloat(document.getElementById('inp-amount').value);
+  const date=document.getElementById('inp-date').value;
+  const credit=parseInt(document.getElementById('inp-credit').value)||0;
+  if(!supplier||!amount||!date){alert('Please fill supplier name, amount and bill date.');return;}
+  const due=new Date(date);due.setDate(due.getDate()+credit);
+  const bill={supplier,invoice,amount,date,credit,dueDate:due.toISOString().split('T')[0]};
+  setLoading(true);setSyncStatus('loading','Saving bill…');
+  try{
+    await api({action:'add',bill:JSON.stringify(bill)});
+    document.getElementById('inp-supplier').value='';
+    document.getElementById('inp-invoice').value='';
+    document.getElementById('inp-amount').value='';
+    document.getElementById('inp-date').value='';
+    document.getElementById('inp-credit').value='30';
+    await loadBills();
+  }catch(e){
+    setSyncStatus('error','Failed to save: '+e.message);
+    setLoading(false);
+  }
+}
+
+async function togglePaid(id){
+  setLoading(true);setSyncStatus('loading','Updating…');
+  try{await api({action:'togglePaid',id});await loadBills();}
+  catch(e){setSyncStatus('error','Failed: '+e.message);setLoading(false);}
+}
+
+async function removeBill(id){
+  if(!confirm('Delete this bill?'))return;
+  setLoading(true);setSyncStatus('loading','Deleting…');
+  try{await api({action:'delete',id});await loadBills();}
+  catch(e){setSyncStatus('error','Failed: '+e.message);setLoading(false);}
+}
+
+function render(){
+  const sorted=[...bills].sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate));
+  let total=0,overdue=0,soon=0,openCount=0;
+  sorted.forEach(b=>{
+    const s=statusFor(b);
+    if(!b.paid){openCount++;total+=Number(b.amount);
+      if(s.key==='overdue')overdue+=Number(b.amount);
+      if(s.key==='soon')soon+=Number(b.amount);}
+  });
+  document.getElementById('stat-total').textContent=fmt(total);
+  document.getElementById('stat-overdue').textContent=fmt(overdue);
+  document.getElementById('stat-soon').textContent=fmt(soon);
+  document.getElementById('stat-count').textContent=openCount;
+
+  const filtered=sorted.filter(b=>{
+    const s=statusFor(b);
+    if(currentFilter==='all')return true;
+    if(currentFilter==='paid')return b.paid;
+    if(currentFilter==='overdue')return !b.paid&&s.key==='overdue';
+    if(currentFilter==='open')return !b.paid;
+    return true;
+  });
+
+  const body=document.getElementById('bills-body');
+  const emptyMsg=document.getElementById('empty-msg');
+  if(filtered.length===0){body.innerHTML='';emptyMsg.style.display='block';}
+  else{
+    emptyMsg.style.display='none';
+    body.innerHTML=filtered.map(b=>{
+      const s=statusFor(b);
+      return `<tr class="${s.rowCls}">
+        <td data-label="Supplier" class="supplier">${escapeHtml(b.supplier)}</td>
+        <td data-label="Invoice no.">${escapeHtml(b.invoice)}</td>
+        <td data-label="Bill date">${escapeHtml(b.date)}</td>
+        <td data-label="Amount">${fmt(Number(b.amount))}</td>
+        <td data-label="Credit">${escapeHtml(b.credit)} days</td>
+        <td data-label="Due date">${escapeHtml(b.dueDate)}</td>
+        <td data-label="Status"><span class="badge ${s.cls}">${s.label}</span></td>
+        <td><div class="row-actions">
+          <button onclick="togglePaid('${b.id}')">${b.paid?'Mark unpaid':'Mark paid'}</button>
+          <button class="danger" onclick="removeBill('${b.id}')">Delete</button>
+        </div></td>
+      </tr>`;
+    }).join('');
+  }
+}
+
+function exportCSV(){
+  const header=['Supplier','Invoice No.','Bill Date','Amount','Credit Days','Due Date','Paid'];
+  const rows=bills.map(b=>[b.supplier,b.invoice||'',b.date,b.amount,b.credit,b.dueDate,b.paid?'Yes':'No']);
+  const csv=[header,...rows].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='bills_'+todayStr()+'.csv';a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Setup panel
+let setupOpen=!SCRIPT_URL;
+document.getElementById('setup-panel').style.display=setupOpen?'block':'none';
+if(SCRIPT_URL)document.getElementById('script-url').value=SCRIPT_URL;
+
+document.getElementById('setup-toggle').addEventListener('click',e=>{
+  e.preventDefault();setupOpen=!setupOpen;
+  document.getElementById('setup-panel').style.display=setupOpen?'block':'none';
+  e.target.textContent=setupOpen?'Set up ▴':'Set up ▾';
+});
+
+document.getElementById('save-url-btn').addEventListener('click',()=>{
+  const url=document.getElementById('script-url').value.trim();
+  if(!url.startsWith('https://script.google.com')){
+    alert('Please paste a valid Google Apps Script URL (starts with https://script.google.com)');return;
+  }
+  SCRIPT_URL=url;
+  localStorage.setItem(SCRIPT_URL_KEY,SCRIPT_URL);
+  document.getElementById('setup-panel').style.display='none';
+  setupOpen=false;
+  document.getElementById('setup-toggle').textContent='Set up ▾';
+  loadBills();
+});
+
+document.getElementById('add-btn').addEventListener('click',addBill);
+document.getElementById('export-btn').addEventListener('click',exportCSV);
+document.getElementById('refresh-btn').addEventListener('click',loadBills);
+
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter=btn.dataset.filter;
+    render();
+  });
+});
+
+document.getElementById('inp-date').value=todayStr();
+setInterval(()=>{if(SCRIPT_URL&&!isSyncing)loadBills();},60000);
+loadBills();
+</script>
+</body>
+</html>
