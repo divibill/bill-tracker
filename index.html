@@ -95,21 +95,21 @@
     </div>
   </header>
 
-  <div class="sync-bar" id="sync-bar">
-    <div class="sync-dot setup" id="sync-dot"></div>
-    <span class="sync-text" id="sync-text">Paste your Apps Script URL below to connect Google Sheets.</span>
-    <a class="setup-link" href="#" id="setup-toggle">Set up ▾</a>
+  <!-- Setup banner: always visible until connected -->
+  <div id="setup-banner" style="background:var(--accent-light);border:1px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:16px;">
+    <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px;">Connect to Google Sheets to get started</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <input type="url" id="script-url" placeholder="Paste your Apps Script URL here: https://script.google.com/macros/s/.../exec" style="flex:1;border-color:var(--accent);">
+      <button id="save-url-btn" style="flex-shrink:0;white-space:nowrap;">Connect</button>
+    </div>
+    <div style="margin-top:6px;font-size:12px;color:var(--accent);">Paste the Web App URL from Apps Script. Every colleague must do this once.</div>
   </div>
 
-  <div class="script-setup" id="setup-panel">
-    <p>Connect to Google Sheets</p>
-    <div class="url-row">
-      <input type="url" id="script-url" placeholder="https://script.google.com/macros/s/.../exec">
-      <button id="save-url-btn">Connect</button>
-    </div>
-    <div style="margin-top:8px;font-size:12px;color:var(--accent);">
-      Paste the Web App URL you got after deploying <strong>Code.gs</strong> in Apps Script.
-    </div>
+  <!-- Sync status bar: visible after connected -->
+  <div class="sync-bar" id="sync-bar" style="display:none;">
+    <div class="sync-dot setup" id="sync-dot"></div>
+    <span class="sync-text" id="sync-text"></span>
+    <a class="setup-link" href="#" id="setup-toggle" style="font-size:12px;color:var(--muted);">Change URL</a>
   </div>
 
   <div class="stats">
@@ -315,28 +315,35 @@ function exportCSV(){
   URL.revokeObjectURL(url);
 }
 
-// Setup panel
-let setupOpen=!SCRIPT_URL;
-document.getElementById('setup-panel').style.display=setupOpen?'block':'none';
-if(SCRIPT_URL)document.getElementById('script-url').value=SCRIPT_URL;
-
-document.getElementById('setup-toggle').addEventListener('click',e=>{
-  e.preventDefault();setupOpen=!setupOpen;
-  document.getElementById('setup-panel').style.display=setupOpen?'block':'none';
-  e.target.textContent=setupOpen?'Set up ▴':'Set up ▾';
-});
-
-document.getElementById('save-url-btn').addEventListener('click',()=>{
-  const url=document.getElementById('script-url').value.trim();
-  if(!url.startsWith('https://script.google.com')){
-    alert('Please paste a valid Google Apps Script URL (starts with https://script.google.com)');return;
+// Setup banner logic
+function showBanner(){
+  document.getElementById("setup-banner").style.display="block";
+  document.getElementById("sync-bar").style.display="none";
+}
+function hideBanner(){
+  document.getElementById("setup-banner").style.display="none";
+  document.getElementById("sync-bar").style.display="flex";
+}
+if(SCRIPT_URL){
+  hideBanner();
+  document.getElementById("script-url").value=SCRIPT_URL;
+}else{
+  showBanner();
+}
+document.getElementById("save-url-btn").addEventListener("click",()=>{
+  const url=document.getElementById("script-url").value.trim();
+  if(!url.startsWith("https://script.google.com")){
+    alert("Please paste a valid Apps Script URL starting with https://script.google.com");return;
   }
   SCRIPT_URL=url;
-  localStorage.setItem(SCRIPT_URL_KEY,SCRIPT_URL);
-  document.getElementById('setup-panel').style.display='none';
-  setupOpen=false;
-  document.getElementById('setup-toggle').textContent='Set up ▾';
+  try{localStorage.setItem(SCRIPT_URL_KEY,SCRIPT_URL);}catch(e){}
+  hideBanner();
   loadBills();
+});
+document.getElementById("setup-toggle").addEventListener("click",e=>{
+  e.preventDefault();
+  document.getElementById("script-url").value=SCRIPT_URL||"";
+  showBanner();
 });
 
 document.getElementById('add-btn').addEventListener('click',addBill);
