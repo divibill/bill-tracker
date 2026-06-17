@@ -11,19 +11,76 @@
     --danger:#A32D2D;--danger-light:#FCEBEB;--warn:#854F0B;--warn-light:#FAEEDA;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);padding:24px;line-height:1.5;}
+  body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;}
+
+  /* ── LOGIN SCREEN ── */
+  .login-screen{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+  }
+  .login-card{
+    background:var(--card);border:1px solid var(--border);border-radius:16px;
+    padding:36px 32px;width:100%;max-width:380px;text-align:center;
+  }
+  .login-logo{
+    width:52px;height:52px;background:var(--accent);border-radius:14px;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 20px;
+    font-size:24px;color:#fff;
+  }
+  .login-card h1{font-size:20px;font-weight:700;margin-bottom:6px;}
+  .login-card .sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
+  .role-tabs{display:flex;gap:8px;margin-bottom:20px;}
+  .role-tab{
+    flex:1;padding:9px;border-radius:8px;border:1px solid var(--border);
+    background:transparent;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;
+  }
+  .role-tab.active{background:var(--accent-light);color:var(--accent);border-color:var(--accent);}
+  .pin-row{display:flex;gap:10px;justify-content:center;margin-bottom:20px;}
+  .pin-dot{
+    width:48px;height:56px;border:1.5px solid var(--border);border-radius:10px;
+    font-size:22px;text-align:center;background:#fff;color:var(--ink);
+    transition:border-color .2s;
+  }
+  .pin-dot:focus{outline:none;border-color:var(--accent);}
+  .login-btn{
+    width:100%;height:42px;background:var(--accent);color:#fff;border:none;
+    border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:12px;
+  }
+  .login-btn:hover{opacity:.9;}
+  .login-error{font-size:13px;color:var(--danger);min-height:18px;margin-bottom:4px;}
+  .login-hint{font-size:12px;color:var(--muted);}
+
+  /* ── APP ── */
+  .app{display:none;padding:24px;}
   .wrap{max-width:1000px;margin:0 auto;}
   header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
-  h1{font-size:24px;font-weight:700;letter-spacing:-0.01em;}
-  .sub{font-size:13px;color:var(--muted);margin-top:4px;}
+  h1{font-size:22px;font-weight:700;letter-spacing:-0.01em;}
+  .sub-head{font-size:13px;color:var(--muted);margin-top:3px;}
+  .header-right{display:flex;gap:8px;align-items:center;}
+  .role-badge{
+    padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;
+  }
+  .role-badge.admin{background:var(--accent-light);color:var(--accent);}
+  .role-badge.staff{background:var(--warn-light);color:var(--warn);}
+
+  /* Stats */
   .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
   .stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
   .stat .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
   .stat .value{font-size:22px;font-weight:700;margin-top:4px;}
   .stat.overdue .value{color:var(--danger);}
   .stat.soon .value{color:var(--warn);}
+
+  /* Panels */
   .panel{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:24px;}
   .panel h2{font-size:15px;font-weight:700;margin-bottom:14px;}
+
+  /* Staff entry panel */
+  .staff-panel{
+    background:var(--card);border:2px solid var(--accent);border-radius:12px;padding:24px;margin-bottom:24px;
+  }
+  .staff-panel h2{font-size:16px;font-weight:700;margin-bottom:4px;}
+  .staff-panel .desc{font-size:13px;color:var(--muted);margin-bottom:18px;}
+
   .form-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr auto;gap:10px;align-items:end;}
   .field label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px;}
   input{width:100%;height:38px;border:1px solid var(--border);border-radius:8px;padding:0 10px;font-size:14px;background:#fff;color:var(--ink);}
@@ -33,26 +90,28 @@
   button:hover{opacity:.9;}
   button:disabled{opacity:.5;cursor:not-allowed;}
 
+  /* Sync bar */
   .sync-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:13px;}
   .sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:#ccc;transition:background .3s;}
   .sync-dot.ok{background:#22c55e;}
   .sync-dot.error{background:var(--danger);}
   .sync-dot.loading{background:var(--warn);animation:pulse 1s infinite;}
-  .sync-dot.setup{background:#8b8b8b;}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  .sync-text{color:var(--muted);flex:1;}
-  .setup-link{font-size:12px;color:var(--accent);text-decoration:none;font-weight:600;}
+  .sync-text{color:var(--muted);flex:1;font-size:13px;}
 
-  .script-setup{padding:12px 14px;background:var(--accent-light);border:1px solid var(--accent);border-radius:10px;margin-bottom:16px;font-size:13px;}
-  .script-setup p{color:var(--accent);font-weight:600;margin-bottom:8px;}
-  .script-setup .url-row{display:flex;gap:8px;align-items:center;}
-  .script-setup input{flex:1;font-size:13px;border-color:var(--accent);}
-  .script-setup button{height:38px;font-size:13px;padding:0 14px;flex-shrink:0;}
+  /* Setup banner */
+  #setup-banner{background:var(--accent-light);border:1px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:16px;}
+  #setup-banner p{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px;}
+  .url-row{display:flex;gap:8px;}
+  .url-row input{flex:1;border-color:var(--accent);}
+  .url-row button{flex-shrink:0;}
 
+  /* Filters */
   .filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
   .filters button{background:transparent;color:var(--muted);border:1px solid var(--border);font-size:13px;height:32px;padding:0 14px;font-weight:500;}
   .filters button.active{background:var(--accent-light);color:var(--accent);border-color:var(--accent);}
 
+  /* Table */
   table{width:100%;border-collapse:collapse;font-size:14px;}
   th{text-align:left;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;padding:8px 10px;border-bottom:1px solid var(--border);}
   td{padding:10px;border-bottom:1px solid var(--border);vertical-align:middle;}
@@ -68,8 +127,22 @@
   .row-actions{display:flex;gap:6px;}
   .row-actions button{height:30px;padding:0 10px;font-size:12px;background:transparent;color:var(--ink);border:1px solid var(--border);}
   .row-actions button.danger{color:var(--danger);border-color:var(--danger-light);}
-  .empty{text-align:center;color:var(--muted);padding:40px 0;font-size:14px;}
+
+  /* Staff my-bills table */
+  .my-bills-panel{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:24px;}
+  .my-bills-panel h2{font-size:15px;font-weight:700;margin-bottom:6px;}
+  .my-bills-panel .desc{font-size:12px;color:var(--muted);margin-bottom:14px;}
+
+  .empty{text-align:center;color:var(--muted);padding:32px 0;font-size:14px;}
   .footer-note{font-size:12px;color:var(--muted);margin-top:8px;}
+
+  /* Success toast */
+  .toast{
+    position:fixed;bottom:24px;right:24px;background:#1F2A24;color:#fff;
+    padding:12px 20px;border-radius:10px;font-size:14px;font-weight:500;
+    opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;z-index:999;
+  }
+  .toast.show{opacity:1;transform:translateY(0);}
 
   @media(max-width:760px){
     .form-grid{grid-template-columns:1fr 1fr;}
@@ -83,115 +156,317 @@
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div>
-      <h1>Bill &amp; payment tracker</h1>
-      <div class="sub">Synced with Google Sheets — all colleagues see the same data</div>
-    </div>
-    <div style="display:flex;gap:8px;">
-      <button class="secondary" id="refresh-btn">↻ Refresh</button>
-      <button class="secondary" id="export-btn">Export CSV</button>
-    </div>
-  </header>
 
-  <!-- Setup banner: always visible until connected -->
-  <div id="setup-banner" style="background:var(--accent-light);border:1px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:16px;">
-    <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px;">Connect to Google Sheets to get started</div>
-    <div style="display:flex;gap:8px;align-items:center;">
-      <input type="url" id="script-url" placeholder="Paste your Apps Script URL here: https://script.google.com/macros/s/.../exec" style="flex:1;border-color:var(--accent);">
-      <button id="save-url-btn" style="flex-shrink:0;white-space:nowrap;">Connect</button>
+<!-- ══════════════════ LOGIN SCREEN ══════════════════ -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">₹</div>
+    <h1>Bill & Payment Tracker</h1>
+    <div class="sub">Enter your PIN to continue</div>
+
+    <div class="role-tabs">
+      <button class="role-tab active" data-role="admin" id="tab-admin">Admin</button>
+      <button class="role-tab" data-role="staff" id="tab-staff">Staff</button>
     </div>
-    <div style="margin-top:6px;font-size:12px;color:var(--accent);">Paste the Web App URL from Apps Script. Every colleague must do this once.</div>
-  </div>
 
-  <!-- Sync status bar: visible after connected -->
-  <div class="sync-bar" id="sync-bar" style="display:none;">
-    <div class="sync-dot setup" id="sync-dot"></div>
-    <span class="sync-text" id="sync-text"></span>
-    <a class="setup-link" href="#" id="setup-toggle" style="font-size:12px;color:var(--muted);">Change URL</a>
-  </div>
-
-  <div class="stats">
-    <div class="stat"><div class="label">Total outstanding</div><div class="value" id="stat-total">₹0</div></div>
-    <div class="stat overdue"><div class="label">Overdue</div><div class="value" id="stat-overdue">₹0</div></div>
-    <div class="stat soon"><div class="label">Due in 7 days</div><div class="value" id="stat-soon">₹0</div></div>
-    <div class="stat"><div class="label">Open bills</div><div class="value" id="stat-count">0</div></div>
-  </div>
-
-  <div class="panel">
-    <h2>Add a bill</h2>
-    <div class="form-grid">
-      <div class="field"><label for="inp-supplier">Supplier / payee</label><input type="text" id="inp-supplier" placeholder="e.g. Sri Velan Yarns"></div>
-      <div class="field"><label for="inp-invoice">Invoice no.</label><input type="text" id="inp-invoice" placeholder="e.g. INV-1023"></div>
-      <div class="field"><label for="inp-amount">Amount (₹)</label><input type="number" id="inp-amount" placeholder="0" min="0"></div>
-      <div class="field"><label for="inp-date">Bill date</label><input type="date" id="inp-date"></div>
-      <div class="field"><label for="inp-credit">Credit days</label><input type="number" id="inp-credit" value="30" min="0"></div>
-      <button id="add-btn">Add bill</button>
+    <div class="pin-row" id="pin-row">
+      <input class="pin-dot" type="password" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-dot" type="password" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-dot" type="password" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-dot" type="password" maxlength="1" inputmode="numeric" pattern="[0-9]">
     </div>
-  </div>
 
-  <div class="panel">
-    <h2>Bills</h2>
-    <div class="filters">
-      <button class="filter-btn active" data-filter="open">Open</button>
-      <button class="filter-btn" data-filter="overdue">Overdue</button>
-      <button class="filter-btn" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="paid">Paid</button>
-    </div>
-    <table>
-      <thead><tr>
-        <th>Supplier</th><th>Invoice no.</th><th>Bill date</th>
-        <th>Amount</th><th>Credit</th><th>Due date</th><th>Status</th><th></th>
-      </tr></thead>
-      <tbody id="bills-body"></tbody>
-    </table>
-    <div id="empty-msg" class="empty" style="display:none;">No bills here yet.</div>
-    <div class="footer-note" id="footer-note">Connect Google Sheets above to sync with your team.</div>
+    <div class="login-error" id="login-error"></div>
+    <button class="login-btn" id="login-btn">Enter</button>
+    <div class="login-hint" id="login-hint">Admin PIN required to view reports & manage bills.</div>
   </div>
 </div>
 
+<!-- ══════════════════ MAIN APP ══════════════════ -->
+<div class="app" id="app">
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Bill & payment tracker</h1>
+        <div class="sub-head" id="app-subtitle"></div>
+      </div>
+      <div class="header-right">
+        <span class="role-badge" id="role-badge"></span>
+        <button class="secondary" id="refresh-btn" style="display:none;">↻ Refresh</button>
+        <button class="secondary" id="export-btn" style="display:none;">Export CSV</button>
+        <button class="secondary" id="logout-btn">Log out</button>
+      </div>
+    </header>
+
+    <!-- Setup banner -->
+    <div id="setup-banner" style="display:none;">
+      <p>Connect to Google Sheets</p>
+      <div class="url-row">
+        <input type="url" id="script-url" placeholder="https://script.google.com/macros/s/.../exec">
+        <button id="save-url-btn">Connect</button>
+      </div>
+      <div style="margin-top:6px;font-size:12px;color:var(--accent);">Paste the Web App URL from Apps Script. Do this once per device.</div>
+    </div>
+
+    <!-- Sync bar -->
+    <div class="sync-bar" id="sync-bar" style="display:none;">
+      <div class="sync-dot" id="sync-dot"></div>
+      <span class="sync-text" id="sync-text"></span>
+      <a href="#" id="change-url-link" style="font-size:12px;color:var(--muted);text-decoration:none;">Change URL</a>
+    </div>
+
+    <!-- ── ADMIN VIEW ── -->
+    <div id="admin-view" style="display:none;">
+      <div class="stats">
+        <div class="stat"><div class="label">Total outstanding</div><div class="value" id="stat-total">₹0</div></div>
+        <div class="stat overdue"><div class="label">Overdue</div><div class="value" id="stat-overdue">₹0</div></div>
+        <div class="stat soon"><div class="label">Due in 7 days</div><div class="value" id="stat-soon">₹0</div></div>
+        <div class="stat"><div class="label">Open bills</div><div class="value" id="stat-count">0</div></div>
+      </div>
+
+      <div class="panel">
+        <h2>Add a bill</h2>
+        <div class="form-grid">
+          <div class="field"><label>Supplier / payee</label><input type="text" id="a-supplier" placeholder="e.g. Sri Velan Yarns"></div>
+          <div class="field"><label>Invoice no.</label><input type="text" id="a-invoice" placeholder="INV-1023"></div>
+          <div class="field"><label>Amount (₹)</label><input type="number" id="a-amount" placeholder="0" min="0"></div>
+          <div class="field"><label>Bill date</label><input type="date" id="a-date"></div>
+          <div class="field"><label>Credit days</label><input type="number" id="a-credit" value="30" min="0"></div>
+          <button id="a-add-btn">Add bill</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>All bills</h2>
+        <div class="filters">
+          <button class="filter-btn active" data-filter="open">Open</button>
+          <button class="filter-btn" data-filter="overdue">Overdue</button>
+          <button class="filter-btn" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="paid">Paid</button>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Supplier</th><th>Invoice</th><th>Bill date</th>
+            <th>Amount</th><th>Credit</th><th>Due date</th><th>Status</th><th></th>
+          </tr></thead>
+          <tbody id="admin-bills-body"></tbody>
+        </table>
+        <div id="admin-empty" class="empty" style="display:none;">No bills here yet.</div>
+        <div class="footer-note" id="admin-footer">Loading…</div>
+      </div>
+    </div>
+
+    <!-- ── STAFF VIEW ── -->
+    <div id="staff-view" style="display:none;">
+      <div class="staff-panel">
+        <h2>Submit a bill</h2>
+        <div class="desc">Fill in the details below and click Add bill. Your entry goes directly to the manager.</div>
+        <div class="form-grid">
+          <div class="field"><label>Supplier / payee</label><input type="text" id="s-supplier" placeholder="e.g. Sri Velan Yarns"></div>
+          <div class="field"><label>Invoice no.</label><input type="text" id="s-invoice" placeholder="INV-1023"></div>
+          <div class="field"><label>Amount (₹)</label><input type="number" id="s-amount" placeholder="0" min="0"></div>
+          <div class="field"><label>Bill date</label><input type="date" id="s-date"></div>
+          <div class="field"><label>Credit days</label><input type="number" id="s-credit" value="30" min="0"></div>
+          <button id="s-add-btn">Add bill</button>
+        </div>
+      </div>
+
+      <div class="my-bills-panel">
+        <h2>Bills submitted this session</h2>
+        <div class="desc">Only bills you added today are shown here.</div>
+        <table>
+          <thead><tr>
+            <th>Supplier</th><th>Invoice</th><th>Bill date</th><th>Amount</th><th>Credit</th><th>Due date</th>
+          </tr></thead>
+          <tbody id="staff-bills-body"></tbody>
+        </table>
+        <div id="staff-empty" class="empty" style="display:none;">No bills submitted yet this session.</div>
+      </div>
+    </div>
+
+  </div><!-- /wrap -->
+</div><!-- /app -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
 <script>
+// ══════════════════════════════════════════════
+//  CONFIG — change these PINs!
+// ══════════════════════════════════════════════
+const ADMIN_PIN = '1314';   // ← change this
+const STAFF_PIN = '1234';   // ← change this
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
 const SCRIPT_URL_KEY = 'bill_tracker_script_url';
 let SCRIPT_URL = localStorage.getItem(SCRIPT_URL_KEY) || '';
-let bills = [];
+let currentRole = null;   // 'admin' | 'staff'
 let currentFilter = 'open';
 let isSyncing = false;
+let allBills = [];
+let mySessionBills = [];  // staff's own bills this session
 
+// ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
 const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
 const todayStr = () => new Date().toISOString().split('T')[0];
-
+function esc(s){ const d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML; }
 function daysBetween(a,b){
   const A=new Date(a);A.setHours(0,0,0,0);
   const B=new Date(b);B.setHours(0,0,0,0);
   return Math.round((B-A)/86400000);
 }
-
 function statusFor(b){
-  const today=todayStr();
-  const daysLeft=daysBetween(today,b.dueDate);
+  const today=todayStr(), dl=daysBetween(today,b.dueDate);
   if(b.paid) return {key:'paid',label:'Paid',cls:'paid',rowCls:'row-paid'};
-  if(daysLeft<0) return {key:'overdue',label:Math.abs(daysLeft)+' days overdue',cls:'overdue',rowCls:'row-overdue'};
-  if(daysLeft<=7) return {key:'soon',label:'Due in '+daysLeft+' day'+(daysLeft===1?'':'s'),cls:'soon',rowCls:'row-soon'};
-  return {key:'ok',label:'Due in '+daysLeft+' days',cls:'ok',rowCls:''};
+  if(dl<0)   return {key:'overdue',label:Math.abs(dl)+' days overdue',cls:'overdue',rowCls:'row-overdue'};
+  if(dl<=7)  return {key:'soon',label:'Due in '+dl+' day'+(dl===1?'':'s'),cls:'soon',rowCls:'row-soon'};
+  return {key:'ok',label:'Due in '+dl+' days',cls:'ok',rowCls:''};
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-function escapeHtml(str){
-  const d=document.createElement('div');d.textContent=String(str||'');return d.innerHTML;
+// ══════════════════════════════════════════════
+//  LOGIN
+// ══════════════════════════════════════════════
+let selectedRole = 'admin';
+const pinDots = document.querySelectorAll('.pin-dot');
+
+document.querySelectorAll('.role-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.role-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    selectedRole = tab.dataset.role;
+    clearPin();
+    document.getElementById('login-error').textContent='';
+    document.getElementById('login-hint').textContent =
+      selectedRole==='admin'
+        ? 'Admin PIN required to view reports & manage bills.'
+        : 'Staff PIN to submit bills.';
+  });
+});
+
+pinDots.forEach((dot,i)=>{
+  dot.addEventListener('input',()=>{
+    dot.value=dot.value.replace(/\D/g,'');
+    if(dot.value && i<pinDots.length-1) pinDots[i+1].focus();
+  });
+  dot.addEventListener('keydown',e=>{
+    if(e.key==='Backspace'&&!dot.value&&i>0) pinDots[i-1].focus();
+    if(e.key==='Enter') attemptLogin();
+  });
+});
+
+function clearPin(){ pinDots.forEach(d=>d.value=''); pinDots[0].focus(); }
+
+function getPin(){ return [...pinDots].map(d=>d.value).join(''); }
+
+function attemptLogin(){
+  const pin = getPin();
+  const err = document.getElementById('login-error');
+  if(pin.length<4){ err.textContent='Enter all 4 digits.'; return; }
+  if(selectedRole==='admin' && pin===ADMIN_PIN){
+    startSession('admin'); return;
+  }
+  if(selectedRole==='staff' && pin===STAFF_PIN){
+    startSession('staff'); return;
+  }
+  err.textContent='Incorrect PIN. Try again.';
+  clearPin();
 }
 
-function setSyncStatus(state,message){
-  document.getElementById('sync-dot').className='sync-dot '+state;
-  document.getElementById('sync-text').textContent=message;
+document.getElementById('login-btn').addEventListener('click', attemptLogin);
+pinDots[0].focus();
+
+// ══════════════════════════════════════════════
+//  SESSION
+// ══════════════════════════════════════════════
+function startSession(role){
+  currentRole = role;
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+
+  const badge = document.getElementById('role-badge');
+  badge.textContent = role==='admin' ? 'Admin' : 'Staff';
+  badge.className = 'role-badge ' + role;
+
+  if(role==='admin'){
+    document.getElementById('app-subtitle').textContent='Full dashboard — outstanding, overdue, all bills';
+    document.getElementById('admin-view').style.display='block';
+    document.getElementById('staff-view').style.display='none';
+    document.getElementById('refresh-btn').style.display='';
+    document.getElementById('export-btn').style.display='';
+    document.getElementById('a-date').value=todayStr();
+  } else {
+    document.getElementById('app-subtitle').textContent='Submit bills — only your entries are visible to you';
+    document.getElementById('admin-view').style.display='none';
+    document.getElementById('staff-view').style.display='block';
+    document.getElementById('refresh-btn').style.display='none';
+    document.getElementById('export-btn').style.display='none';
+    document.getElementById('s-date').value=todayStr();
+    renderStaffTable();
+  }
+
+  initConnection();
 }
 
-function setLoading(on){
-  isSyncing=on;
-  document.getElementById('add-btn').disabled=on;
-  document.getElementById('refresh-btn').disabled=on;
+document.getElementById('logout-btn').addEventListener('click',()=>{
+  currentRole=null; allBills=[]; mySessionBills=[];
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('admin-view').style.display='none';
+  document.getElementById('staff-view').style.display='none';
+  clearPin();
+  document.getElementById('login-error').textContent='';
+});
+
+// ══════════════════════════════════════════════
+//  CONNECTION / SYNC
+// ══════════════════════════════════════════════
+function initConnection(){
+  if(!SCRIPT_URL){
+    document.getElementById('setup-banner').style.display='block';
+    document.getElementById('sync-bar').style.display='none';
+  } else {
+    document.getElementById('setup-banner').style.display='none';
+    document.getElementById('sync-bar').style.display='flex';
+    if(currentRole==='admin') loadBills();
+    else setSyncStatus('ok','Connected to Google Sheets.');
+  }
 }
 
-// All API calls use GET with query params — avoids CORS preflight issues
+document.getElementById('save-url-btn').addEventListener('click',()=>{
+  const url=document.getElementById('script-url').value.trim();
+  if(!url.startsWith('https://script.google.com')){
+    alert('Please paste a valid Apps Script URL.'); return;
+  }
+  SCRIPT_URL=url;
+  try{localStorage.setItem(SCRIPT_URL_KEY,SCRIPT_URL);}catch(e){}
+  document.getElementById('setup-banner').style.display='none';
+  document.getElementById('sync-bar').style.display='flex';
+  if(currentRole==='admin') loadBills();
+  else setSyncStatus('ok','Connected to Google Sheets.');
+});
+
+document.getElementById('change-url-link').addEventListener('click',e=>{
+  e.preventDefault();
+  document.getElementById('script-url').value=SCRIPT_URL||'';
+  document.getElementById('setup-banner').style.display='block';
+  document.getElementById('sync-bar').style.display='none';
+});
+
+function setSyncStatus(state,msg){
+  const dot=document.getElementById('sync-dot');
+  dot.className='sync-dot '+(state==='ok'?'ok':state==='loading'?'loading':'error');
+  document.getElementById('sync-text').textContent=msg;
+}
+
 async function api(params){
   if(!SCRIPT_URL) throw new Error('No script URL');
   const qs=new URLSearchParams(params).toString();
@@ -202,64 +477,27 @@ async function api(params){
   return data;
 }
 
+// ══════════════════════════════════════════════
+//  ADMIN — load & render
+// ══════════════════════════════════════════════
 async function loadBills(){
-  if(!SCRIPT_URL){setSyncStatus('setup','Paste your Apps Script URL above to get started.');return;}
-  setLoading(true);
-  setSyncStatus('loading','Syncing with Google Sheets…');
+  if(!SCRIPT_URL){setSyncStatus('error','Not connected.');return;}
+  isSyncing=true; setSyncStatus('loading','Syncing…');
   try{
     const data=await api({action:'list'});
-    bills=data.bills||[];
+    allBills=data.bills||[];
     const t=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-    setSyncStatus('ok','Synced · Last updated '+t);
-    document.getElementById('footer-note').textContent='Data stored in Google Sheets — shared with your team.';
+    setSyncStatus('ok','Synced · '+t);
+    document.getElementById('admin-footer').textContent='Data stored in Google Sheets, shared with your team.';
   }catch(e){
-    setSyncStatus('error','Failed to fetch: '+e.message+' — check your URL and re-deploy.');
-    console.error(e);
+    setSyncStatus('error','Fetch failed: '+e.message);
   }finally{
-    setLoading(false);
-    render();
+    isSyncing=false; renderAdmin();
   }
 }
 
-async function addBill(){
-  const supplier=document.getElementById('inp-supplier').value.trim();
-  const invoice=document.getElementById('inp-invoice').value.trim();
-  const amount=parseFloat(document.getElementById('inp-amount').value);
-  const date=document.getElementById('inp-date').value;
-  const credit=parseInt(document.getElementById('inp-credit').value)||0;
-  if(!supplier||!amount||!date){alert('Please fill supplier name, amount and bill date.');return;}
-  const due=new Date(date);due.setDate(due.getDate()+credit);
-  const bill={supplier,invoice,amount,date,credit,dueDate:due.toISOString().split('T')[0]};
-  setLoading(true);setSyncStatus('loading','Saving bill…');
-  try{
-    await api({action:'add',bill:JSON.stringify(bill)});
-    document.getElementById('inp-supplier').value='';
-    document.getElementById('inp-invoice').value='';
-    document.getElementById('inp-amount').value='';
-    document.getElementById('inp-date').value='';
-    document.getElementById('inp-credit').value='30';
-    await loadBills();
-  }catch(e){
-    setSyncStatus('error','Failed to save: '+e.message);
-    setLoading(false);
-  }
-}
-
-async function togglePaid(id){
-  setLoading(true);setSyncStatus('loading','Updating…');
-  try{await api({action:'togglePaid',id});await loadBills();}
-  catch(e){setSyncStatus('error','Failed: '+e.message);setLoading(false);}
-}
-
-async function removeBill(id){
-  if(!confirm('Delete this bill?'))return;
-  setLoading(true);setSyncStatus('loading','Deleting…');
-  try{await api({action:'delete',id});await loadBills();}
-  catch(e){setSyncStatus('error','Failed: '+e.message);setLoading(false);}
-}
-
-function render(){
-  const sorted=[...bills].sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate));
+function renderAdmin(){
+  const sorted=[...allBills].sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate));
   let total=0,overdue=0,soon=0,openCount=0;
   sorted.forEach(b=>{
     const s=statusFor(b);
@@ -274,27 +512,26 @@ function render(){
 
   const filtered=sorted.filter(b=>{
     const s=statusFor(b);
-    if(currentFilter==='all')return true;
-    if(currentFilter==='paid')return b.paid;
-    if(currentFilter==='overdue')return !b.paid&&s.key==='overdue';
-    if(currentFilter==='open')return !b.paid;
-    return true;
+    if(currentFilter==='all') return true;
+    if(currentFilter==='paid') return b.paid;
+    if(currentFilter==='overdue') return !b.paid&&s.key==='overdue';
+    return !b.paid;
   });
 
-  const body=document.getElementById('bills-body');
-  const emptyMsg=document.getElementById('empty-msg');
-  if(filtered.length===0){body.innerHTML='';emptyMsg.style.display='block';}
+  const body=document.getElementById('admin-bills-body');
+  const empty=document.getElementById('admin-empty');
+  if(!filtered.length){body.innerHTML='';empty.style.display='block';}
   else{
-    emptyMsg.style.display='none';
+    empty.style.display='none';
     body.innerHTML=filtered.map(b=>{
       const s=statusFor(b);
       return `<tr class="${s.rowCls}">
-        <td data-label="Supplier" class="supplier">${escapeHtml(b.supplier)}</td>
-        <td data-label="Invoice no.">${escapeHtml(b.invoice)}</td>
-        <td data-label="Bill date">${escapeHtml(b.date)}</td>
+        <td data-label="Supplier" class="supplier">${esc(b.supplier)}</td>
+        <td data-label="Invoice">${esc(b.invoice)}</td>
+        <td data-label="Bill date">${esc(b.date)}</td>
         <td data-label="Amount">${fmt(Number(b.amount))}</td>
-        <td data-label="Credit">${escapeHtml(b.credit)} days</td>
-        <td data-label="Due date">${escapeHtml(b.dueDate)}</td>
+        <td data-label="Credit">${esc(b.credit)} days</td>
+        <td data-label="Due date">${esc(b.dueDate)}</td>
         <td data-label="Status"><span class="badge ${s.cls}">${s.label}</span></td>
         <td><div class="row-actions">
           <button onclick="togglePaid('${b.id}')">${b.paid?'Mark unpaid':'Mark paid'}</button>
@@ -305,9 +542,95 @@ function render(){
   }
 }
 
+async function adminAddBill(){
+  const supplier=document.getElementById('a-supplier').value.trim();
+  const invoice=document.getElementById('a-invoice').value.trim();
+  const amount=parseFloat(document.getElementById('a-amount').value);
+  const date=document.getElementById('a-date').value;
+  const credit=parseInt(document.getElementById('a-credit').value)||0;
+  if(!supplier||!amount||!date){alert('Fill supplier, amount and date.');return;}
+  const due=new Date(date);due.setDate(due.getDate()+credit);
+  const bill={supplier,invoice,amount,date,credit,dueDate:due.toISOString().split('T')[0]};
+  document.getElementById('a-add-btn').disabled=true;
+  setSyncStatus('loading','Saving…');
+  try{
+    await api({action:'add',bill:JSON.stringify(bill)});
+    document.getElementById('a-supplier').value='';
+    document.getElementById('a-invoice').value='';
+    document.getElementById('a-amount').value='';
+    document.getElementById('a-date').value=todayStr();
+    document.getElementById('a-credit').value='30';
+    showToast('Bill added successfully');
+    await loadBills();
+  }catch(e){setSyncStatus('error','Save failed: '+e.message);}
+  finally{document.getElementById('a-add-btn').disabled=false;}
+}
+
+async function togglePaid(id){
+  setSyncStatus('loading','Updating…');
+  try{await api({action:'togglePaid',id});await loadBills();}
+  catch(e){setSyncStatus('error','Failed: '+e.message);}
+}
+
+async function removeBill(id){
+  if(!confirm('Delete this bill?'))return;
+  setSyncStatus('loading','Deleting…');
+  try{await api({action:'delete',id});await loadBills();}
+  catch(e){setSyncStatus('error','Failed: '+e.message);}
+}
+
+// ══════════════════════════════════════════════
+//  STAFF — add bill & show own entries
+// ══════════════════════════════════════════════
+async function staffAddBill(){
+  const supplier=document.getElementById('s-supplier').value.trim();
+  const invoice=document.getElementById('s-invoice').value.trim();
+  const amount=parseFloat(document.getElementById('s-amount').value);
+  const date=document.getElementById('s-date').value;
+  const credit=parseInt(document.getElementById('s-credit').value)||0;
+  if(!supplier||!amount||!date){alert('Fill supplier, amount and date.');return;}
+  if(!SCRIPT_URL){alert('Not connected to Google Sheets. Ask admin for the URL.');return;}
+  const due=new Date(date);due.setDate(due.getDate()+credit);
+  const bill={supplier,invoice,amount,date,credit,dueDate:due.toISOString().split('T')[0]};
+  document.getElementById('s-add-btn').disabled=true;
+  setSyncStatus('loading','Submitting bill…');
+  try{
+    await api({action:'add',bill:JSON.stringify(bill)});
+    mySessionBills.unshift({...bill,id:Date.now()});
+    document.getElementById('s-supplier').value='';
+    document.getElementById('s-invoice').value='';
+    document.getElementById('s-amount').value='';
+    document.getElementById('s-date').value=todayStr();
+    document.getElementById('s-credit').value='30';
+    setSyncStatus('ok','Bill submitted successfully!');
+    showToast('Bill submitted!');
+    renderStaffTable();
+  }catch(e){setSyncStatus('error','Submit failed: '+e.message);}
+  finally{document.getElementById('s-add-btn').disabled=false;}
+}
+
+function renderStaffTable(){
+  const body=document.getElementById('staff-bills-body');
+  const empty=document.getElementById('staff-empty');
+  if(!mySessionBills.length){body.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  body.innerHTML=mySessionBills.map(b=>`
+    <tr>
+      <td data-label="Supplier">${esc(b.supplier)}</td>
+      <td data-label="Invoice">${esc(b.invoice||'—')}</td>
+      <td data-label="Bill date">${esc(b.date)}</td>
+      <td data-label="Amount">${fmt(Number(b.amount))}</td>
+      <td data-label="Credit">${esc(b.credit)} days</td>
+      <td data-label="Due date">${esc(b.dueDate)}</td>
+    </tr>`).join('');
+}
+
+// ══════════════════════════════════════════════
+//  EXPORT (admin only)
+// ══════════════════════════════════════════════
 function exportCSV(){
-  const header=['Supplier','Invoice No.','Bill Date','Amount','Credit Days','Due Date','Paid'];
-  const rows=bills.map(b=>[b.supplier,b.invoice||'',b.date,b.amount,b.credit,b.dueDate,b.paid?'Yes':'No']);
+  const header=['Supplier','Invoice','Bill Date','Amount','Credit Days','Due Date','Paid'];
+  const rows=allBills.map(b=>[b.supplier,b.invoice||'',b.date,b.amount,b.credit,b.dueDate,b.paid?'Yes':'No']);
   const csv=[header,...rows].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob=new Blob([csv],{type:'text/csv'});
   const url=URL.createObjectURL(blob);
@@ -315,53 +638,24 @@ function exportCSV(){
   URL.revokeObjectURL(url);
 }
 
-// Setup banner logic
-function showBanner(){
-  document.getElementById("setup-banner").style.display="block";
-  document.getElementById("sync-bar").style.display="none";
-}
-function hideBanner(){
-  document.getElementById("setup-banner").style.display="none";
-  document.getElementById("sync-bar").style.display="flex";
-}
-if(SCRIPT_URL){
-  hideBanner();
-  document.getElementById("script-url").value=SCRIPT_URL;
-}else{
-  showBanner();
-}
-document.getElementById("save-url-btn").addEventListener("click",()=>{
-  const url=document.getElementById("script-url").value.trim();
-  if(!url.startsWith("https://script.google.com")){
-    alert("Please paste a valid Apps Script URL starting with https://script.google.com");return;
-  }
-  SCRIPT_URL=url;
-  try{localStorage.setItem(SCRIPT_URL_KEY,SCRIPT_URL);}catch(e){}
-  hideBanner();
-  loadBills();
-});
-document.getElementById("setup-toggle").addEventListener("click",e=>{
-  e.preventDefault();
-  document.getElementById("script-url").value=SCRIPT_URL||"";
-  showBanner();
-});
-
-document.getElementById('add-btn').addEventListener('click',addBill);
-document.getElementById('export-btn').addEventListener('click',exportCSV);
-document.getElementById('refresh-btn').addEventListener('click',loadBills);
+// ══════════════════════════════════════════════
+//  EVENT LISTENERS
+// ══════════════════════════════════════════════
+document.getElementById('a-add-btn').addEventListener('click', adminAddBill);
+document.getElementById('s-add-btn').addEventListener('click', staffAddBill);
+document.getElementById('refresh-btn').addEventListener('click', loadBills);
+document.getElementById('export-btn').addEventListener('click', exportCSV);
 
 document.querySelectorAll('.filter-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     currentFilter=btn.dataset.filter;
-    render();
+    renderAdmin();
   });
 });
 
-document.getElementById('inp-date').value=todayStr();
-setInterval(()=>{if(SCRIPT_URL&&!isSyncing)loadBills();},60000);
-loadBills();
+setInterval(()=>{if(currentRole==='admin'&&SCRIPT_URL&&!isSyncing)loadBills();},60000);
 </script>
 </body>
 </html>
